@@ -21,16 +21,17 @@ If you're using a named SQL Server-instance, e.g. "SQLEXPRESS", in "Services":
 3. Click "apply"
 4. Click "start"
 
-If no firewall is active (or causing problems), you are now able to access the SQL Server-instance from another host-machine using "SQL Server Management Studio" (SSMS).
-
 
 # Configure Windows Firewall to allow connections to SQL Server
 > It appears that SSMS-connections to the SQL Server are considered part of the "public network" firewall rules.
 
 On the Windows Server running the SQL Server-instance, choose the applicable route based on whether you are using a default or named SQL Server-instance, after which you will be able to connect to the SQL Server using SSMS from another host-machine:
 
-## Default-instance
-1. Run `CMD`
+
+## Default instance
+If the SQL Server-instance is the "default instance", you need to:
+
+1. Run `cmd`
 2. Open PowerShell by executing `powershell` in the command prompt
 3. Copy, paste and execute the following commands:
 
@@ -39,8 +40,9 @@ New-NetFirewallRule -DisplayName "SQL Server default-instance" -Direction Inboun
 New-NetFirewallRule -DisplayName "SQL Server Browser service" -Direction Inbound -LocalPort 1434 -Protocol UDP -Action Allow
 ```
 
-## Named-instance(s)
-When running one or more named instances, there are a couple of other steps to go through.
+
+## Named instance(s)
+When running one or more named instances, there are a couple of additional steps to go through, which will are detailed in the following.
 
 First, you need to create a firewall-rule to open UDP port `1434` which is used to query the real TCP port of the named instance. To do this:
 
@@ -48,7 +50,7 @@ First, you need to create a firewall-rule to open UDP port `1434` which is used 
 1. Copy, paste and execute the following command:
 
 ```
-netsh advfirewall firewall add rule name = "SQL Server UDP port" dir = in protocol = udp action = allow localport = 1434 remoteip = localsubnet profile = DOMAIN,PRIVATE,PUBLIC
+netsh advfirewall firewall add rule name = "SQL Server Browser service" dir = in protocol = udp action = allow localport = 1434 remoteip = localsubnet profile = DOMAIN,PRIVATE,PUBLIC
 ```
 
 Next, you need to enable a passage for the "SQL browser" through the firewall. To do this:
