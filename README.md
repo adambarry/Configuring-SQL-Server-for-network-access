@@ -49,30 +49,16 @@ You can now access the SQL Server-instance via SSMS via the "server name": `{hos
 
 
 ## Named instance(s)
-When running one or more named instances, e.g. `SQLEXPRESS2019`, there are a couple of additional steps to go through, which will are detailed in the following.
+When running one or more named instances, e.g. `SQLEXPRESS2014`, `SQLEXPRESS2019`, `SQLEXPRESS2022`, there are a couple of additional steps to go through, which will are detailed in the following.
 
-First, you need to create a firewall-rule to open UDP port `1434` which is used to query the real TCP port of the named instance. To do this:
+First, you need to create a firewall-rule that enables external communication with the host's "SQL Server browser" service, which is used to query the real TCP port of the named instance. To do this:
 
 1. Run `cmd`
 1. Copy, paste and execute the following command:
 
 ```
-netsh advfirewall firewall add rule name = "SQL Server browser service" dir = in protocol = udp action = allow localport = 1434 remoteip = localsubnet profile = DOMAIN,PRIVATE,PUBLIC
+netsh advfirewall firewall add rule name = "SQL Server Browser service" dir = in protocol = udp action = allow localport = 1434 remoteip = localsubnet profile = DOMAIN,PRIVATE,PUBLIC
 ```
-
-Next, you need to enable a passage for the "SQL browser" through the firewall. To do this:
-
-1. Open "Windows Defender Firewall with advanced security"
-1. Select "inbound rules"
-1. Click "new rule":
-    1. Rule type: `Program`
-    1. Program: This program path: `C:\Program Files (x86)\Microsoft SQL Server\90\Shared\sqlbrowser.exe` (the default destination for the SQL Server browser)
-    1. Action: `Allow the connection`
-    1. Profile: Select all options, i.e. `domain`, `private`, `public`
-    1. Name: `SQL Server browser`
-1. Click "finish"
-
-> You probably need to restart the computer in order for the changes to take effect.
 
 Then you need to run `cmd`, and for **each named instance**, you need to:
 
@@ -84,4 +70,6 @@ netsh advfirewall firewall add rule name = "{instance name}" dir = in protocol =
 
 > You can set the `{instance name}` to whatever you like. The instance name is just my preference.
 
-You can no access the SQL Server-instance via SSMS via the "server name": `{hostname}\{instance name}`, e.g. `SQLHOST\SQLEXPRESS2019`.
+You can now access the SQL Server-instance via SSMS via the "server name": `{hostname}\{instance name}`, e.g. `SQLHOST\SQLEXPRESS2019`.
+
+> You may need to restart the computer in order for the changes to take effect.
