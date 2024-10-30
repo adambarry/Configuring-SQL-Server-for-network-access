@@ -72,4 +72,6 @@ netsh advfirewall firewall add rule name = "{instance name}" dir = in protocol =
 
 You can now access the SQL Server-instance via SSMS via the "server name": `{hostname}\{instance name}`, e.g. `SQLHOST\SQLEXPRESS2019`.
 
+> Note that if connecting to the SQL Server-instance with a connection-string, you either need to specify the correct port, e.g. `1435`, or omit the port as specifying an incorrect value will connect you to the wrong SQL Server-instance.
+
 > You may need to restart the computer in order for the changes to take effect.
